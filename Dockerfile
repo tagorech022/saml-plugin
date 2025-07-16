@@ -1,12 +1,11 @@
-FROM jenkins/jenkins:lts
+# Use Maven with Java 17 (compatible with Jenkins plugins)
+FROM maven:3.9.6-eclipse-temurin-17
 
-USER root
+# Set working directory inside the container
+WORKDIR /saml-plugin
 
-# Optional: install curl if needed
-RUN apt-get update && apt-get install -y curl
+# Copy plugin source code into container
+COPY . .
 
-# Switch back to jenkins user
-USER jenkins
-
-# Install the unique-id plugin
-RUN jenkins-plugin-cli --plugins unique-id
+# Run Maven tests (includes jenkins-test-harness-based tests)
+CMD ["mvn", "test"]
