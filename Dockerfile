@@ -1,15 +1,12 @@
-# Use a lightweight Java 17 base image
-FROM eclipse-temurin:17-jdk-alpine
+FROM jenkins/jenkins:lts
 
-# Set the working directory inside the container
-WORKDIR /app
+USER root
 
-# Copy the built JAR file into the image
-# Update the filename below if your actual JAR name is different
-COPY target/demo-workshop-2.0.2.jar app.jar
+# Optional: install curl if needed
+RUN apt-get update && apt-get install -y curl
 
-# Expose the application's port (adjust if needed)
-EXPOSE 8080
+# Switch back to jenkins user
+USER jenkins
 
-# Run the JAR file
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Install the unique-id plugin
+RUN jenkins-plugin-cli --plugins unique-id
